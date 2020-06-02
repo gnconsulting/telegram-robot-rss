@@ -9,7 +9,7 @@ from util.processing import BatchProcess
 from util.feedhandler import FeedHandler
 
 
-class RobotRss(object):
+class GNCloudRSSBot(object):
 
     def __init__(self, telegram_token, update_interval):
 
@@ -24,7 +24,7 @@ class RobotRss(object):
         # Add Commands to bot
         self._addCommand(CommandHandler("start", self.start))
         self._addCommand(CommandHandler("stop", self.stop))
-        self._addCommand(CommandHandler("help", self.help))
+        self._addCommand(CommandHandler("help-me", self.help))
         self._addCommand(CommandHandler("list", self.list))
         self._addCommand(CommandHandler("about", self.about))
         self._addCommand(CommandHandler("add", self.add, pass_args=True))
@@ -69,7 +69,7 @@ class RobotRss(object):
 
         self.db.update_user(telegram_id=telegram_user.id, is_active=1)
 
-        message = "You will now receive news! Use /help if you need some tips how to tell me what to do!"
+        message = "You will now receive news! Use /help-me if you need some tips how to tell me what to do!"
         update.message.reply_text(message)
 
     def add(self, bot, update, args):
@@ -77,7 +77,7 @@ class RobotRss(object):
         Adds a rss subscription to user
         """
 
-        telegram_user = update.message.from_user
+        telegram_user = update.message.chat
 
         if len(args) != 2:
             message = "Sorry! I could not add the entry! Please use the the command passing the following arguments:\n\n /add <url> <entryname> \n\n Here is a short example: \n\n /add http://www.feedforall.com/sample.xml ExampleEntry"
@@ -200,10 +200,10 @@ class RobotRss(object):
 
     def help(self, bot, update):
         """
-        Send a message when the command /help is issued.
+        Send a message when the command /help-me is issued.
         """
 
-        message = "If you need help with handling the commands, please have a look at my <a href='https://github.com/cbrgm/telegram-robot-rss'>Github</a> page. There I have summarized everything necessary for you!"
+        message = "Controls\n/start - Activates the bot. If you have subscribed to RSS feeds, you will receive news from now on\n/stop - Deactivates the bot. You won't receive any messages from the bot until you activate the bot again using the start command\n\nRSS Management\n/add <url> <entryname> - Adds a new subscription to your list.\n/remove <entryname> - Removes an exisiting subscription from your list.\n/get <entryname> [optional: <count 1-10>] - Manually parses your subscription, sending you the last elements.\n/list - Shows all your subscriptions as a list.\n\nOther\n/about - Shows some information about RobotRSS Bot\n/help-me - Shows the help menu\n\nIf you need help with handling the commands, please have a look at my <a href='https://github.com/gnconsulting/telegram-robot-rss'>Github</a> page. There I have summarized everything necessary for you!"
         update.message.reply_text(message, parse_mode=ParseMode.HTML)
 
     def stop(self, bot, update):
@@ -222,7 +222,7 @@ class RobotRss(object):
         Shows about information
         """
 
-        message = "Thank you for using <b>RobotRSS</b>! \n\n If you like the bot, please recommend it to others! \n\nDo you have problems, ideas or suggestions about what the bot should be able to do? Then contact my developer <a href='http://cbrgm.de'>@cbrgm</a> or create an issue on <a href='https://github.com/cbrgm/telegram-robot-rss'>Github</a>. There you will also find my source code, if you are interested in how I work!"
+        message = "Thank you for using <b>GNCloudRSSBot</b>! \n\n If you like the bot, please recommend it to others! \n\nDo you have problems, ideas or suggestions about what the bot should be able to do? Then, create an issue on <a href='https://github.com/gnconsulting/telegram-robot-rss'>Github</a>. There you will also find my source code, if you are interested in how I work!"
         update.message.reply_text(message, parse_mode=ParseMode.HTML)
 
 
@@ -234,4 +234,4 @@ if __name__ == '__main__':
     # Pass Credentials to bot
     token = credentials["telegram_token"]
     update = credentials["update_interval"]
-    RobotRss(telegram_token=token, update_interval=update)
+    GNCloudRSSBot(telegram_token=token, update_interval=update)

@@ -1,13 +1,12 @@
 FROM python:2.7-alpine
-WORKDIR /workspace
-COPY . /workspace
+CMD python .docker/initconfig.py && python robotrss.py
 
 # Environment Variables for future use
 ENV BOT_TOKEN telegram_bot_token
 ENV UPDATE_INTERVAL 300
 
-RUN mkdir /workspace/resources/userdata
-RUN pip install -r requirements.txt
+WORKDIR /workspace
+COPY . /workspace
 
-VOLUME /workspace/resources
-CMD python .docker/initconfig.py && python robotrss.py
+RUN mkdir /workspace/resources/userdata
+RUN pip install -r requirements.txt && chgrp -R root /workspace && chmod -R g+rwx /workspace \
