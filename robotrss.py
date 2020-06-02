@@ -24,7 +24,8 @@ class GNCloudRSSBot(object):
         # Add Commands to bot
         self._addCommand(CommandHandler("start", self.start))
         self._addCommand(CommandHandler("stop", self.stop))
-        self._addCommand(CommandHandler("help-me", self.help))
+        self._addCommand(CommandHandler("help", self.help))
+        self._addCommand(CommandHandler("ajuda", self.ajuda))
         self._addCommand(CommandHandler("list", self.list))
         self._addCommand(CommandHandler("about", self.about))
         self._addCommand(CommandHandler("add", self.add, pass_args=True))
@@ -69,7 +70,7 @@ class GNCloudRSSBot(object):
 
         self.db.update_user(telegram_id=telegram_user.id, is_active=1)
 
-        message = "You will now receive news! Use /help-me if you need some tips how to tell me what to do!"
+        message = "You will now receive news! Use /help if you need some tips how to tell me what to do!"
         update.message.reply_text(message)
 
     def add(self, bot, update, args):
@@ -200,11 +201,20 @@ class GNCloudRSSBot(object):
 
     def help(self, bot, update):
         """
-        Send a message when the command /help-me is issued.
+        Send a message when the command /help is issued.
         """
 
-        message = "Controls\n/start - Activates the bot. If you have subscribed to RSS feeds, you will receive news from now on\n/stop - Deactivates the bot. You won't receive any messages from the bot until you activate the bot again using the start command\n\nRSS Management\n/add <url> <entryname> - Adds a new subscription to your list.\n/remove <entryname> - Removes an exisiting subscription from your list.\n/get <entryname> [optional: <count 1-10>] - Manually parses your subscription, sending you the last elements.\n/list - Shows all your subscriptions as a list.\n\nOther\n/about - Shows some information about RobotRSS Bot\n/help-me - Shows the help menu\n\nIf you need help with handling the commands, please have a look at my <a href='https://github.com/gnconsulting/telegram-robot-rss'>Github</a> page. There I have summarized everything necessary for you!"
+        message = "Controls\n/start - Activates the bot. If you have subscribed to RSS feeds, you will receive news from now on\n/stop - Deactivates the bot. You won't receive any messages from the bot until you activate the bot again using the start command\n\nRSS Management\n/add <url> <entryname> - Adds a new subscription to your list.\n/remove <entryname> - Removes an exisiting subscription from your list.\n/get <entryname> [optional: <count 1-10>] - Manually parses your subscription, sending you the last elements.\n/list - Shows all your subscriptions as a list.\n\nOther\n/about - Shows some information about RobotRSS Bot\n/help - Shows the help menu\n\nIf you need help with handling the commands, please have a look at my <a href='https://github.com/gnconsulting/telegram-robot-rss'>Github</a> page. There I have summarized everything necessary for you!"
         update.message.reply_text(message, parse_mode=ParseMode.HTML)
+
+    def ajuda(self, bot, update):
+        """
+        Send a message when the command /help is issued.
+        """
+
+        message = "Controls\n/start - Activates the bot. If you have subscribed to RSS feeds, you will receive news from now on\n/stop - Deactivates the bot. You won't receive any messages from the bot until you activate the bot again using the start command\n\nRSS Management\n/add <url> <entryname> - Adds a new subscription to your list.\n/remove <entryname> - Removes an exisiting subscription from your list.\n/get <entryname> [optional: <count 1-10>] - Manually parses your subscription, sending you the last elements.\n/list - Shows all your subscriptions as a list.\n\nOther\n/about - Shows some information about RobotRSS Bot\n/help - Shows the help menu!"
+        update.message.reply_text(message, parse_mode=ParseMode.HTML)
+
 
     def stop(self, bot, update):
         """
