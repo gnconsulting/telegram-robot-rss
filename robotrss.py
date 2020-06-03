@@ -16,10 +16,12 @@ class GNCloudRSSBot(object):
         # Initialize bot internals
         self.db = DatabaseHandler("resources/datastore.db")
         self.fh = FileHandler("..")
+        print("Database loaded! Registering webhook to bot...")
 
         # Register webhook to telegram bot
         self.updater = Updater(telegram_token)
         self.dispatcher = self.updater.dispatcher
+        print("Webhook added! Loading commands...")
 
         # Add Commands to bot
         self._addCommand(CommandHandler("start", self.start))
@@ -31,10 +33,11 @@ class GNCloudRSSBot(object):
         self._addCommand(CommandHandler("add", self.add, pass_args=True))
         self._addCommand(CommandHandler("get", self.get, pass_args=True))
         self._addCommand(CommandHandler("remove", self.remove, pass_args=True))
+        print("Commands added! Starting the bot...")
 
         # Start the Bot
-        self.processing = BatchProcess(
-            database=self.db, update_interval=update_interval, bot=self.dispatcher.bot)
+        self.processing = BatchProcess(database=self.db, update_interval=update_interval, bot=self.dispatcher.bot)
+        print("Bot started!")
 
         self.processing.start()
         self.updater.start_polling()
@@ -53,6 +56,7 @@ class GNCloudRSSBot(object):
         """
 
         telegram_user = update.message.from_user
+        print("Start command received!")
 
         # Add new User if not exists
         if not self.db.get_user(telegram_id=telegram_user.id):
@@ -79,6 +83,7 @@ class GNCloudRSSBot(object):
         """
 
         telegram_user = update.message.chat
+        print("Add command received!")
 
         if len(args) != 2:
             message = "Sorry! I could not add the entry! Please use the the command passing the following arguments:\n\n /add <url> <entryname> \n\n Here is a short example: \n\n /add http://www.feedforall.com/sample.xml ExampleEntry"
@@ -122,6 +127,7 @@ class GNCloudRSSBot(object):
         """
 
         telegram_user = update.message.from_user
+        print("Get command received!")
 
         if len(args) > 2:
             message = "To get the last news of your subscription please use /get <entryname> [optional: <count 1-10>]. Make sure you first add a feed using the /add command."
@@ -164,6 +170,7 @@ class GNCloudRSSBot(object):
         """
 
         telegram_user = update.message.from_user
+        print("Remove command received!")
 
         if len(args) != 1:
             message = "To remove a subscriptions from your list please use /remove <entryname>. To see all your subscriptions along with their entry names use /list !"
@@ -189,6 +196,7 @@ class GNCloudRSSBot(object):
         """
 
         telegram_user = update.message.from_user
+        print("List command received!")
 
         message = "Here is a list of all subscriptions I stored for you!"
         update.message.reply_text(message)
@@ -204,6 +212,8 @@ class GNCloudRSSBot(object):
         Send a message when the command /help is issued.
         """
 
+        print("Help command received!")
+
         message = "Controls\n/start - Activates the bot. If you have subscribed to RSS feeds, you will receive news from now on\n/stop - Deactivates the bot. You won't receive any messages from the bot until you activate the bot again using the start command\n\nRSS Management\n/add <url> <entryname> - Adds a new subscription to your list.\n/remove <entryname> - Removes an exisiting subscription from your list.\n/get <entryname> [optional: <count 1-10>] - Manually parses your subscription, sending you the last elements.\n/list - Shows all your subscriptions as a list.\n\nOther\n/about - Shows some information about RobotRSS Bot\n/help - Shows the help menu\n\nIf you need help with handling the commands, please have a look at my <a href='https://github.com/gnconsulting/telegram-robot-rss'>Github</a> page. There I have summarized everything necessary for you!"
         update.message.reply_text(message, parse_mode=ParseMode.HTML)
 
@@ -211,6 +221,8 @@ class GNCloudRSSBot(object):
         """
         Send a message when the command /help is issued.
         """
+
+        print("Ajuda command received!")
 
         message = "Controls\n/start - Activates the bot. If you have subscribed to RSS feeds, you will receive news from now on\n/stop - Deactivates the bot. You won't receive any messages from the bot until you activate the bot again using the start command\n\nRSS Management\n/add <url> <entryname> - Adds a new subscription to your list.\n/remove <entryname> - Removes an exisiting subscription from your list.\n/get <entryname> [optional: <count 1-10>] - Manually parses your subscription, sending you the last elements.\n/list - Shows all your subscriptions as a list.\n\nOther\n/about - Shows some information about RobotRSS Bot\n/help - Shows the help menu!"
         update.message.reply_text(message, parse_mode=ParseMode.HTML)
@@ -222,6 +234,7 @@ class GNCloudRSSBot(object):
         """
 
         telegram_user = update.message.from_user
+        print("Stop command received!")
         self.db.update_user(telegram_id=telegram_user.id, is_active=0)
 
         message = "Oh.. Okay, I will not send you any more news updates! If you change your mind and you want to receive messages from me again use /start command again!"
@@ -232,6 +245,8 @@ class GNCloudRSSBot(object):
         Shows about information
         """
 
+        print("About command received!")
+
         message = "Thank you for using <b>GNCloudRSSBot</b>! \n\n If you like the bot, please recommend it to others! \n\nDo you have problems, ideas or suggestions about what the bot should be able to do? Then, create an issue on <a href='https://github.com/gnconsulting/telegram-robot-rss'>Github</a>. There you will also find my source code, if you are interested in how I work!"
         update.message.reply_text(message, parse_mode=ParseMode.HTML)
 
@@ -240,6 +255,7 @@ if __name__ == '__main__':
     # Load Credentials
     fh = FileHandler("..")
     credentials = fh.load_json("resources/credentials.json")
+    print("Credentials loaded! Starting bot...")
 
     # Pass Credentials to bot
     token = credentials["telegram_token"]

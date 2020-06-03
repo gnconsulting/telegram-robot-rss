@@ -37,6 +37,7 @@ class BatchProcess(threading.Thread):
 
     def parse_parallel(self, queue, threads):
         time_started = datetime.datetime.now()
+        print("Started updating feeds! Time is " + str(time_started) + " ")
 
         pool = ThreadPool(threads)
         pool.map(self.update_feed, queue)
@@ -52,9 +53,12 @@ class BatchProcess(threading.Thread):
         telegram_users = self.db.get_users_for_url(url=url[0])
 
         for user in telegram_users:
+            print("Verifying if user is active so we can send messages ")
             if user[6]:  # is_active
+                print("Found active user: " + user + " ")
                 try:
                     for post in FeedHandler.parse_feed(url[0]):
+                        print("Send to user: " + user + " " + post + " " + url + " ")
                         self.send_newest_messages(
                             url=url, post=post, user=user)
                 except:
@@ -80,6 +84,7 @@ class BatchProcess(threading.Thread):
             except Unauthorized:
                 self.db.update_user(telegram_id=user[0], is_active=0)
             except TelegramError:
+                print("Something happened: " + TelegramError + " ")
                 # handle all other telegram related errors
                 pass
 
