@@ -3,7 +3,7 @@ CMD python .docker/initconfig.py && python robotrss.py
 
 # Environment Variables for future use
 ENV BOT_TOKEN telegram_bot_token
-ENV UPDATE_INTERVAL 300
+ENV UPDATE_INTERVAL 60
 
 WORKDIR /workspace
 COPY . /workspace
