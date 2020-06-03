@@ -1,5 +1,4 @@
 import sqlite3
-from os import makedirs
 from util.filehandler import FileHandler
 from util.datehandler import DateHandler as dh
 
@@ -12,7 +11,6 @@ class DatabaseHandler(object):
         self.filehandler = FileHandler(relative_root_path="..")
 
         if not self.filehandler.file_exists(self.database_path):
-            makedirs("resources/userdata")
             sql_command = self.filehandler.load_file("db/setup.sql")
 
             conn = sqlite3.connect(self.database_path)
