@@ -55,7 +55,7 @@ class GNCloudRSSBot(object):
         Send a message when the command /start is issued.
         """
 
-        telegram_user = update.message.from_user
+        telegram_user = update.message.chat
         print("Start command received!")
 
         # Add new User if not exists
@@ -126,7 +126,7 @@ class GNCloudRSSBot(object):
         Manually parses an rss feed
         """
 
-        telegram_user = update.message.from_user
+        telegram_user = update.message.chat
         print("Get command received!")
 
         if len(args) > 2:
@@ -169,7 +169,7 @@ class GNCloudRSSBot(object):
         Removes an rss subscription from user
         """
 
-        telegram_user = update.message.from_user
+        telegram_user = update.message.chat
         print("Remove command received!")
 
         if len(args) != 1:
@@ -195,7 +195,7 @@ class GNCloudRSSBot(object):
         Displays a list of all user subscriptions
         """
 
-        telegram_user = update.message.from_user
+        telegram_user = update.message.chat
         print("List command received!")
 
         message = "Here is a list of all subscriptions I stored for you!"
@@ -233,7 +233,7 @@ class GNCloudRSSBot(object):
         Stops the bot from working
         """
 
-        telegram_user = update.message.from_user
+        telegram_user = update.message.chat
         print("Stop command received!")
         self.db.update_user(telegram_id=telegram_user.id, is_active=0)
 

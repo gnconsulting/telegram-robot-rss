@@ -1,5 +1,5 @@
 FROM python:2.7-alpine
-CMD mkdir -p /workspace/resources/userdata && python .docker/initconfig.py && python robotrss.py
+CMD mkdir -p /workspace/resources/userdata && cp /workspace/db/setup.sql /workspace/setup.sql && python .docker/initconfig.py && python robotrss.py
 
 # Environment Variables for future use
 ENV BOT_TOKEN telegram_bot_token
